@@ -25,6 +25,16 @@ export class ClientsGateway {
 
     @SubscribeMessage("join-org")
     handleJoinOrg(@ConnectedSocket() socket: Socket, org_id: string) {
-        socket.join(`org-${org_id}`)
+        if (!org_id) {
+            console.log(`Socket (${socket.id}) could not connect`);
+            socket.emit("join-error", "No organization id provided");
+            return;
+        }
+
+        const room = `org-${org_id}`;
+        socket.join(room)
+        console.log(`Socket ${socket.id} joined ${room}`);
+
+        socket.emit("join-success", { room, message: `Successfully joined ${room}` });
     }
 }
