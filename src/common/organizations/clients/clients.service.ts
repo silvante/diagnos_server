@@ -6,10 +6,11 @@ import { startOfDay, endOfDay } from 'date-fns';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { SearchClientParamsDto } from './dto/search-clients.dto';
 import * as dayjs from 'dayjs';
+import { ClientsGateway } from './clients.gateway';
 
 @Injectable()
 export class ClientsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly client_gateway: ClientsGateway) {}
 
   async create(req: RequestWithUser, data: CreateClientDto) {
     const organization = req.organization;
@@ -33,6 +34,9 @@ export class ClientsService {
         type: true,
       },
     });
+
+    // realtime: Create Event
+    this.client_gateway.sendNewClient(String(organization.id), client)
 
     return client;
   }
@@ -133,6 +137,9 @@ export class ClientsService {
       },
     });
 
+    // realime: Update event
+    this.client_gateway.sendUpdatedClient(String(org.id), updated)
+
     if (!updated) {
       throw new HttpException('Internal server error', 404);
     }
@@ -186,6 +193,9 @@ export class ClientsService {
       },
     });
 
+    // realtime: Update event
+    this.client_gateway.sendUpdatedClient(String(organization.id), updated)
+
     return updated;
   }
 
@@ -213,6 +223,10 @@ export class ClientsService {
     }
 
     await this.prisma.client.delete({ where: { id: client.id } });
+
+    // realtime: Delete event
+    this.client_gateway.sendDeletedClient(String(organization.id), client.id)
+    
     return {
       deleted: true,
     };
