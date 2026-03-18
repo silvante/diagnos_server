@@ -1,10 +1,11 @@
-import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
 @WebSocketGateway({
     cors: {
         origin: "*",
     },
+    transports: ['websocket']
 })
 export class ClientsGateway {
     @WebSocketServer()
@@ -24,16 +25,16 @@ export class ClientsGateway {
 
 
     @SubscribeMessage("join-org")
-    handleJoinOrg(@ConnectedSocket() socket: Socket, org_id: string) {
+    handleJoinOrg(@ConnectedSocket() socket: Socket, @MessageBody() org_id: any) {
         if (!org_id) {
-            console.log(`Socket (${socket.id}) could not connect`);
+            console.log(`>> Socket (${socket.id}) could not connect`);
             socket.emit("join-error", "No organization id provided");
             return;
         }
 
         const room = `org-${org_id}`;
         socket.join(room)
-        console.log(`Socket ${socket.id} joined ${room}`);
+        console.log(`>> Socket ID: "${socket.id}" >> Joined ROOM: "${room}"`);
 
         socket.emit("join-success", { room, message: `Successfully joined ${room}` });
     }
