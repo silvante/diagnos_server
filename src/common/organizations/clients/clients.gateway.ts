@@ -11,18 +11,17 @@ export class ClientsGateway {
     @WebSocketServer()
     server: Server;
 
-    sendNewClient(org_id: string, client: any) {
-        this.server.to(`org-${org_id}`).emit("client-created", client)
+    sendNewClient(org_id: string, client: any, event_owner_id: number) {
+        this.server.to(`org-${org_id}`).emit("client-created", {client: client, event_owner: event_owner_id})
     }
 
-    sendUpdatedClient(org_id: string, client: any) {
-        this.server.to(`org-${org_id}`).emit("client-updated", client)
+    sendUpdatedClient(org_id: string, client: any, event_owner_id: number) {
+        this.server.to(`org-${org_id}`).emit("client-updated", {client: client, event_owner: event_owner_id})
     }
 
-    sendDeletedClient(org_id: string, client_id: number) {
-        this.server.to(`org-${org_id}`).emit("client-deleted", client_id)
+    sendDeletedClient(org_id: string, client: any, event_owner_id: number) {
+        this.server.to(`org-${org_id}`).emit("client-deleted", {client: client, event_owner: event_owner_id})
     }
-
 
     @SubscribeMessage("join-org")
     handleJoinOrg(@ConnectedSocket() socket: Socket, @MessageBody() org_id: any) {

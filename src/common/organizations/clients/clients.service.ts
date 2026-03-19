@@ -14,6 +14,7 @@ export class ClientsService {
 
   async create(req: RequestWithUser, data: CreateClientDto) {
     const organization = req.organization;
+    const user = req.user
 
     const { type_id, ...clientData } = data;
     const client = await this.prisma.client.create({
@@ -36,7 +37,7 @@ export class ClientsService {
     });
 
     // realtime: Create Event
-    this.client_gateway.sendNewClient(String(organization.id), client)
+    this.client_gateway.sendNewClient(String(organization.id), client, user.id)
 
     return client;
   }
@@ -110,6 +111,7 @@ export class ClientsService {
     const org = req.organization;
     const worker = req.worker;
     let where: any = {};
+    const user = req.user
 
     if (worker && worker.role === 'doctor') {
       const typeIds = worker.attached_types.map((at) => at.id);
@@ -138,7 +140,7 @@ export class ClientsService {
     });
 
     // realime: Update event
-    this.client_gateway.sendUpdatedClient(String(org.id), updated)
+    this.client_gateway.sendUpdatedClient(String(org.id), updated, user.id)
 
     if (!updated) {
       throw new HttpException('Internal server error', 404);
@@ -156,6 +158,7 @@ export class ClientsService {
     data: UpdateClientDto,
   ) {
     const organization = req.organization;
+    const user = req.user
     const client = await this.prisma.client.findUnique({
       where: { id: client_id, organization_id: organization.id },
       include: {
@@ -194,7 +197,7 @@ export class ClientsService {
     });
 
     // realtime: Update event
-    this.client_gateway.sendUpdatedClient(String(organization.id), updated)
+    this.client_gateway.sendUpdatedClient(String(organization.id), updated, user.id)
 
     return updated;
   }
@@ -207,6 +210,7 @@ export class ClientsService {
         organization: true,
       },
     });
+    const user = req.user
 
     if (!client) {
       throw new HttpException(
@@ -225,7 +229,7 @@ export class ClientsService {
     await this.prisma.client.delete({ where: { id: client.id } });
 
     // realtime: Delete event
-    this.client_gateway.sendDeletedClient(String(organization.id), client.id)
+    this.client_gateway.sendDeletedClient(String(organization.id), client, user.id)
     
     return {
       deleted: true,
