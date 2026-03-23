@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
   provider = "postgresql"
 }
 
@@ -119,23 +119,30 @@ model Client {
   origin          String
   price           Int
   is_checked      Boolean      @default(false)
-  type            Type?        @relation(fields: [type_id], references: [id])
-  type_id         Int?
   organization    Organization @relation(fields: [organization_id], references: [id])
   organization_id Int
   created_at      DateTime     @default(now())
-  // adter check
-  diagnosis       String?
+  diagnoses       Diagnosis[]
+}
+
+model Diagnosis {
+  id        Int     @id @default(autoincrement())
+  client    Client  @relation(fields: [client_id], references: [id])
+  client_id Int
+  type      Type    @relation(fields: [type_id], references: [id])
+  type_id   Int
+  // after check
+  report    String?
 }
 
 model Type {
   id               Int                  @id @default(autoincrement())
   name             String
   description      String?
-  clients          Client[]
   price            Int
   organization     Organization?        @relation(fields: [organization_id], references: [id])
   organization_id  Int?
   created_at       DateTime             @default(now())
   attached_workers WorkerAttachedType[]
+  diagnoses        Diagnosis[]
 }
