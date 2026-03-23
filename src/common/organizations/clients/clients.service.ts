@@ -58,6 +58,8 @@ export class ClientsService {
     const day_end = endOfDay(new Date());
 
     let where: any = {};
+    let include: any = {};
+
     if (worker && worker.role === 'doctor') {
       const typeIds = worker.attached_types.map((at) => at.id);
       where = {
@@ -66,7 +68,19 @@ export class ClientsService {
           gte: day_start,
           lte: day_end,
         },
-        type_id: { in: typeIds },
+        diagnoses: {
+          some: {
+            id: { in: typeIds },
+          },
+        },
+      };
+
+      include = {
+        diagnoses: {
+          where: {
+            id: { in: typeIds },
+          },
+        },
       };
     } else {
       where = {
@@ -76,13 +90,15 @@ export class ClientsService {
           lte: day_end,
         },
       };
+
+      include = {
+        diagnoses: true,
+      };
     }
 
     const clients = await this.prisma.client.findMany({
       where: where,
-      include: {
-        diagnoses: true,
-      },
+      include: include,
     });
 
     if (!clients) {
