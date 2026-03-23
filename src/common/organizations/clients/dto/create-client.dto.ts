@@ -1,4 +1,4 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsArray, IsInt, IsString } from 'class-validator';
 
 export class CreateClientDto {
   @IsString()
@@ -16,6 +16,6 @@ export class CreateClientDto {
   @IsInt()
   price: number;
 
-  @IsInt()
-  type_id: number;
+  @IsArray()
+  type_ids: [number];
 }

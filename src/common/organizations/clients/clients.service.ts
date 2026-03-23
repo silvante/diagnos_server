@@ -10,34 +10,42 @@ import { ClientsGateway } from './clients.gateway';
 
 @Injectable()
 export class ClientsService {
-  constructor(private readonly prisma: PrismaService, private readonly client_gateway: ClientsGateway) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly client_gateway: ClientsGateway,
+  ) {}
 
   async create(req: RequestWithUser, data: CreateClientDto) {
     const organization = req.organization;
-    const user = req.user
+    const user = req.user;
 
-    const { type_id, ...clientData } = data;
+    const { type_ids, ...clientData } = data;
     const client = await this.prisma.client.create({
       data: {
         ...clientData,
-        type: {
-          connect: {
-            id: type_id,
-          },
-        },
+
         organization: {
           connect: {
             id: organization.id,
           },
         },
+        diagnoses: {
+          create: type_ids.map((id) => ({
+            type: {
+              connect: {
+                id: id,
+              },
+            },
+          })),
+        },
       },
       include: {
-        type: true,
+        diagnoses: true,
       },
     });
 
     // realtime: Create Event
-    this.client_gateway.sendNewClient(String(organization.id), client, user.id)
+    this.client_gateway.sendNewClient(String(organization.id), client, user.id);
 
     return client;
   }
@@ -73,7 +81,7 @@ export class ClientsService {
     const clients = await this.prisma.client.findMany({
       where: where,
       include: {
-        type: true,
+        diagnoses: true,
       },
     });
 
@@ -90,7 +98,7 @@ export class ClientsService {
         include: {
           _count: {
             select: {
-              clients: true,
+              diagnoses: true,
               attached_workers: true,
             },
           },
@@ -105,20 +113,21 @@ export class ClientsService {
 
   async checkClient(
     req: RequestWithUser,
-    diagnosis: string,
+    report: string,
     client_id: number,
+    diagnosis_id: number,
   ) {
     const org = req.organization;
     const worker = req.worker;
     let where: any = {};
-    const user = req.user
+    const user = req.user;
 
     if (worker && worker.role === 'doctor') {
       const typeIds = worker.attached_types.map((at) => at.id);
 
       where = {
-        id: client_id,
-        organization_id: org.id,
+        id: diagnosis_id,
+        client_id: client_id,
         type_id: {
           in: typeIds,
         },
@@ -128,27 +137,33 @@ export class ClientsService {
       where = { id: client_id, organization_id: org.id };
     }
 
-    const updated = await this.prisma.client.update({
+    const updated_diagnosis = await this.prisma.diagnosis.update({
       where: where,
       data: {
         is_checked: true,
-        diagnosis,
+        report: report,
       },
       include: {
-        type: true,
+        client: {
+          include: {
+            diagnoses: true,
+          },
+        },
       },
     });
 
-    // realime: Update event
-    this.client_gateway.sendUpdatedClient(String(org.id), updated, user.id)
+    const client = updated_diagnosis.client;
 
-    if (!updated) {
+    if (!updated_diagnosis) {
       throw new HttpException('Internal server error', 404);
     }
 
+    // realime: Update event
+    this.client_gateway.sendUpdatedClient(String(org.id), client, user.id);
+
     return {
       checked: true,
-      client: updated,
+      client: client,
     };
   }
 
@@ -158,7 +173,7 @@ export class ClientsService {
     data: UpdateClientDto,
   ) {
     const organization = req.organization;
-    const user = req.user
+    const user = req.user;
     const client = await this.prisma.client.findUnique({
       where: { id: client_id, organization_id: organization.id },
       include: {
@@ -197,7 +212,11 @@ export class ClientsService {
     });
 
     // realtime: Update event
-    this.client_gateway.sendUpdatedClient(String(organization.id), updated, user.id)
+    this.client_gateway.sendUpdatedClient(
+      String(organization.id),
+      updated,
+      user.id,
+    );
 
     return updated;
   }
@@ -210,7 +229,7 @@ export class ClientsService {
         organization: true,
       },
     });
-    const user = req.user
+    const user = req.user;
 
     if (!client) {
       throw new HttpException(
@@ -229,8 +248,12 @@ export class ClientsService {
     await this.prisma.client.delete({ where: { id: client.id } });
 
     // realtime: Delete event
-    this.client_gateway.sendDeletedClient(String(organization.id), client, user.id)
-    
+    this.client_gateway.sendDeletedClient(
+      String(organization.id),
+      client,
+      user.id,
+    );
+
     return {
       deleted: true,
     };

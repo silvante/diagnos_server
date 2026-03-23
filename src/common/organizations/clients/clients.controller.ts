@@ -50,13 +50,14 @@ export class ClientsController {
   }
 
   @UseGuards(AuthGuard, OrganizationAccessGuard, DoctorAccessGuard)
-  @Put('/:client_id/check')
+  @Put('/:client_id/check/:diagnosis_id')
   checkClient(
     @Req() req: RequestWithUser,
-    @Body('diagnosis') diagnosis: string,
+    @Body('report') diagnosis: string,
     @Param('client_id') client_id: string,
+    @Param('diagnosis_id') diagnosis_id: string,
   ) {
-    return this.clientsService.checkClient(req, diagnosis, +client_id);
+    return this.clientsService.checkClient(req, diagnosis, +client_id, +diagnosis_id);
   }
 
   @UseGuards(AuthGuard, OrganizationAccessGuard, ReceptionistAccessGuard)
