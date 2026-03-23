@@ -178,6 +178,7 @@ export class ClientsService {
       where: { id: client_id, organization_id: organization.id },
       include: {
         organization: true,
+        diagnoses: true,
       },
     });
 
@@ -195,19 +196,36 @@ export class ClientsService {
       );
     }
 
-    const { type_id, ...updateData } = data;
+    const { type_ids, ...updateData } = data;
+
+    // Handling deleable and undeleteable Diagnosis
+    const existing_diagnosis = client.diagnoses;
+    const deletable = existing_diagnosis
+      .filter((d) => !d.is_checked && type_ids?.includes(d.type_id))
+      .map((d) => d.id);
+
+    const existing_type_ids = existing_diagnosis.map((d) => d.type_id);
+    const to_create = type_ids?.filter((id) => !existing_type_ids.includes(id));
+
     const updated = await this.prisma.client.update({
       where: { id: client.id },
       data: {
         ...updateData,
-        type: {
-          connect: {
-            id: type_id,
+        diagnoses: {
+          deleteMany: {
+            id: { in: deletable },
           },
+          create: to_create?.map((t_id) => ({
+            type: {
+              connect: {
+                id: t_id,
+              },
+            },
+          })),
         },
       },
       include: {
-        type: true,
+        diagnoses: true,
       },
     });
 
@@ -277,13 +295,15 @@ export class ClientsService {
             mode: 'insensitive',
           },
           ...(query.born_in && { born_in: query.born_in }),
-          ...(query.type_id && { type_id: query.type_id }),
+          ...(query.type_id && {
+            diagnoses: { some: { type_id: query.type_id } },
+          }),
         },
         skip,
         take: query.limit,
         orderBy: { created_at: 'desc' },
         include: {
-          type: true,
+          diagnoses: true,
         },
       }),
       this.prisma.client.count({
@@ -337,7 +357,7 @@ export class ClientsService {
         skip,
         take: query.limit,
         include: {
-          type: true,
+          diagnoses: true,
         },
       }),
       this.prisma.client.count({
