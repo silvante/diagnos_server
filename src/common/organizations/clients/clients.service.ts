@@ -138,10 +138,6 @@ export class ClientsService {
     const user = req.user;
 
     let where: any = {};
-    let include: any = {};
-
-    // toodles
-
     if (worker && worker.role === 'doctor') {
       const typeIds = worker.attached_types.map((at) => at.id);
 
@@ -172,7 +168,19 @@ export class ClientsService {
       },
     });
 
-    const client = updated_diagnosis.client;
+    let client = updated_diagnosis.client;
+
+    const to_update = client.diagnoses.find((d) => d.is_checked !== true);
+
+    if (to_update) {
+      client = await this.prisma.client.update({
+        where: { id: client.id },
+        data: { is_checked: true },
+        include: {
+          diagnoses: true,
+        },
+      });
+    }
 
     if (!updated_diagnosis) {
       throw new HttpException('Internal server error', 404);
