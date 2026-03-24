@@ -40,7 +40,15 @@ export class ClientsService {
         },
       },
       include: {
-        diagnoses: true,
+        diagnoses: {
+          include: {
+            type: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -80,6 +88,13 @@ export class ClientsService {
           where: {
             id: { in: typeIds },
           },
+          include: {
+            type: {
+              select: {
+                name: true,
+              },
+            },
+          },
         },
       };
     } else {
@@ -92,7 +107,15 @@ export class ClientsService {
       };
 
       include = {
-        diagnoses: true,
+        diagnoses: {
+          include: {
+            type: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       };
     }
 
@@ -168,7 +191,15 @@ export class ClientsService {
       include: {
         client: {
           include: {
-            diagnoses: true,
+            diagnoses: {
+              include: {
+                type: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -183,7 +214,15 @@ export class ClientsService {
         where: { id: client.id },
         data: { is_checked: true },
         include: {
-          diagnoses: true,
+          diagnoses: {
+            include: {
+              type: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
       });
     }
@@ -267,7 +306,15 @@ export class ClientsService {
         },
       },
       include: {
-        diagnoses: true,
+        diagnoses: {
+          include: {
+            type: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 
