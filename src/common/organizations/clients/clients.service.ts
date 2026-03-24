@@ -158,6 +158,11 @@ export class ClientsService {
       data: {
         is_checked: true,
         report: report,
+        reporter: {
+          connect: {
+            id: user.id,
+          },
+        },
       },
       include: {
         client: {
