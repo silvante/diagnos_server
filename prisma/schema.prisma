@@ -127,16 +127,17 @@ model Client {
 }
 
 model Diagnosis {
-  id          Int     @id @default(autoincrement())
-  client      Client  @relation(fields: [client_id], references: [id])
-  client_id   Int
-  type        Type    @relation(fields: [type_id], references: [id])
-  type_id     Int
-  is_checked  Boolean @default(false)
+  id            Int     @id @default(autoincrement())
+  client        Client  @relation(fields: [client_id], references: [id])
+  client_id     Int
+  type          Type    @relation(fields: [type_id], references: [id])
+  type_id       Int
+  is_checked    Boolean @default(false)
   // after check
-  reporter    User?   @relation(fields: [reporter_id], references: [id])
-  reporter_id Int?
-  report      String?
+  reporter      User?   @relation(fields: [reporter_id], references: [id])
+  reporter_id   Int?
+  reporter_name String?
+  report        String?
 }
 
 model Type {
