@@ -195,6 +195,14 @@ export class ClientsService {
     // realime: Update event
     this.client_gateway.sendUpdatedClient(String(org.id), client, user.id);
 
+    if (worker && worker.role !== 'doctor') {
+      const typeIds = worker.attached_types.map((at) => at.id);
+      let diagnoses = client.diagnoses.filter((d) =>
+        typeIds.includes(d.type_id),
+      );
+      client.diagnoses = diagnoses;
+    }
+
     return {
       checked: true,
       client: client,
