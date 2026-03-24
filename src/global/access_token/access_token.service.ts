@@ -11,6 +11,7 @@ export class AccessTokenService {
       {
         id: user.id,
         username: user.username,
+        name: user.name,
         email: user.email,
         action: 'access',
       },

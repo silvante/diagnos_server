@@ -173,7 +173,7 @@ export class ClientsService {
         is_checked: false,
       };
     } else {
-      where = { id: client_id, organization_id: org.id };
+      where = { id: diagnosis_id, client_id: client_id };
     }
 
     const updated_diagnosis = await this.prisma.diagnosis.update({
@@ -209,7 +209,7 @@ export class ClientsService {
 
     const to_update = client.diagnoses.find((d) => d.is_checked !== true);
 
-    if (to_update) {
+    if (!to_update) {
       client = await this.prisma.client.update({
         where: { id: client.id },
         data: { is_checked: true },
