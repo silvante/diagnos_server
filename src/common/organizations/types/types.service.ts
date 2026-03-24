@@ -17,7 +17,7 @@ export class TypesService {
       include: {
         _count: {
           select: {
-            clients: true,
+            diagnoses: true,
             attached_workers: true,
           },
         },
@@ -42,7 +42,7 @@ export class TypesService {
       include: {
         _count: {
           select: {
-            clients: true,
+            diagnoses: true,
           },
         },
       },
@@ -60,7 +60,7 @@ export class TypesService {
       include: {
         _count: {
           select: {
-            clients: true,
+            diagnoses: true,
           },
         },
       },
@@ -85,7 +85,7 @@ export class TypesService {
         organization: true,
         _count: {
           select: {
-            clients: true,
+            diagnoses: true,
           },
         },
       },
@@ -95,7 +95,7 @@ export class TypesService {
       throw new HttpException('Type not found', 404);
     }
 
-    if (type._count.clients > 0) {
+    if (type._count.diagnoses > 0) {
       throw new HttpException(
         'You can not delete this type, it has clients attached.',
         404,
