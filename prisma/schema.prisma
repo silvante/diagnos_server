@@ -128,7 +128,7 @@ model Client {
 
 model Diagnosis {
   id            Int     @id @default(autoincrement())
-  client        Client  @relation(fields: [client_id], references: [id])
+  client        Client  @relation(fields: [client_id], references: [id], onDelete: Cascade)
   client_id     Int
   type          Type    @relation(fields: [type_id], references: [id])
   type_id       Int
