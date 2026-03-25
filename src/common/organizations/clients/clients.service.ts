@@ -416,7 +416,9 @@ export class ClientsService {
             mode: 'insensitive',
           },
           ...(query.born_in && { born_in: query.born_in }),
-          ...(query.type_id && { type_id: query.type_id }),
+          ...(query.type_id && {
+            diagnoses: { some: { type_id: query.type_id } },
+          }),
         },
       }),
     ]);
