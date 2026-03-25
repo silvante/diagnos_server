@@ -78,7 +78,7 @@ export class ClientsService {
         },
         diagnoses: {
           some: {
-            id: { in: typeIds },
+            type_id: { in: typeIds },
           },
         },
       };
@@ -86,7 +86,7 @@ export class ClientsService {
       include = {
         diagnoses: {
           where: {
-            id: { in: typeIds },
+            type_id: { in: typeIds },
           },
           include: {
             type: {
@@ -334,6 +334,11 @@ export class ClientsService {
       where: { id: client_id, organization_id: organization.id },
       include: {
         organization: true,
+        diagnoses: {
+          include: {
+            type: true,
+          },
+        },
       },
     });
     const user = req.user;
