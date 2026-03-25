@@ -392,7 +392,15 @@ export class ClientsService {
         take: query.limit,
         orderBy: { created_at: 'desc' },
         include: {
-          diagnoses: true,
+          diagnoses: {
+            include: {
+              type: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
       }),
       this.prisma.client.count({
@@ -446,7 +454,15 @@ export class ClientsService {
         skip,
         take: query.limit,
         include: {
-          diagnoses: true,
+          diagnoses: {
+            include: {
+              type: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
       }),
       this.prisma.client.count({
