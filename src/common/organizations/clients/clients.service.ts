@@ -20,6 +20,12 @@ export class ClientsService {
     const user = req.user;
 
     const { type_ids, ...clientData } = data;
+    if (!type_ids || type_ids.length <= 0) {
+      throw new HttpException(
+        "1ta yoki undan ko'p turlar tanlanishi kerak!",
+        404,
+      );
+    }
     const client = await this.prisma.client.create({
       data: {
         ...clientData,
@@ -278,6 +284,12 @@ export class ClientsService {
     }
 
     const { type_ids, ...updateData } = data;
+    if (!type_ids || type_ids.length <= 0) {
+      throw new HttpException(
+        "1ta yoki undan ko'p turlar tanlanishi kerak!",
+        404,
+      );
+    }
 
     // Handling deleable and undeleteable Diagnosis
     const existing_diagnosis = client.diagnoses;
