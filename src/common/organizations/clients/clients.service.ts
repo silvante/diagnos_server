@@ -230,7 +230,7 @@ export class ClientsService {
     if (!updated_diagnosis) {
       throw new HttpException('Internal server error', 404);
     }
-    
+
     // realime: Update event
     this.client_gateway.sendUpdatedClient(String(org.id), client, user.id);
 
@@ -241,7 +241,6 @@ export class ClientsService {
       );
       client.diagnoses = diagnoses;
     }
-
 
     return {
       checked: true,
@@ -283,13 +282,13 @@ export class ClientsService {
     // Handling deleable and undeleteable Diagnosis
     const existing_diagnosis = client.diagnoses;
     const deletable = existing_diagnosis
-      .filter((d) => !d.is_checked && type_ids?.includes(d.type_id))
+      .filter((d) => !d.is_checked && !type_ids?.includes(d.type_id))
       .map((d) => d.id);
 
     const existing_type_ids = existing_diagnosis.map((d) => d.type_id);
     const to_create = type_ids?.filter((id) => !existing_type_ids.includes(id));
 
-    const updated = await this.prisma.client.update({
+    let updated = await this.prisma.client.update({
       where: { id: client.id },
       data: {
         ...updateData,
@@ -318,6 +317,26 @@ export class ClientsService {
         },
       },
     });
+
+    const to_update = updated.diagnoses.find((d) => d.is_checked !== true);
+
+    if (!to_update) {
+      updated = await this.prisma.client.update({
+        where: { id: client.id },
+        data: { is_checked: true },
+        include: {
+          diagnoses: {
+            include: {
+              type: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
 
     // realtime: Update event
     this.client_gateway.sendUpdatedClient(
