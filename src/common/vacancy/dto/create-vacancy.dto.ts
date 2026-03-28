@@ -1,5 +1,5 @@
 import { WorkerRoles } from '@prisma/client';
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class CreateVacancyDto {
   @IsString()
@@ -22,4 +22,7 @@ export class CreateVacancyDto {
 
   @IsString()
   role: WorkerRoles;
+
+  @IsBoolean()
+  is_private: boolean;
 }

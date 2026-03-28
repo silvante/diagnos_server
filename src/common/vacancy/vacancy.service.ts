@@ -8,7 +8,10 @@ import { GenerateAccessIdService } from 'src/global/generate-access-id/generate-
 
 @Injectable()
 export class VacancyService {
-  constructor(private readonly prisma: PrismaService, private readonly a_id: GenerateAccessIdService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly a_id: GenerateAccessIdService,
+  ) {}
 
   async create(req: RequestWithUser, data: CreateVacancyDto) {
     const user = req.user;
@@ -20,7 +23,7 @@ export class VacancyService {
             id: user.id,
           },
         },
-        a_id: this.a_id.generate()
+        a_id: this.a_id.generate(),
       },
       include: {
         user: true,
@@ -48,7 +51,7 @@ export class VacancyService {
 
   async findOne(id: number) {
     const vacancy = await this.prisma.vacancy.findUnique({
-      where: { id: id },
+      where: { id: id, is_private: false },
       include: {
         user: true,
       },
@@ -109,6 +112,7 @@ export class VacancyService {
       this.prisma.vacancy.findMany({
         where: {
           origin: origin,
+          is_private: false,
           name: {
             contains: query,
             mode: 'insensitive',
