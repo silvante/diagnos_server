@@ -9,6 +9,7 @@ import { GenerateUniquenameService } from './generate_uniquename/generate_unique
 import { NameSanitizerService } from './name_sanitizer/name_sanitizer.service';
 import { SubscriptionCheckerService } from './subscription_checker/subscription_checker.service';
 import { MagicLinkGeneratorService } from './magic_link_generator/magic_link_generator.service';
+import { GenerateAccessIdService } from './generate-access-id/generate-access-id.service';
 
 @Module({
   imports: [PrismaModule, AppJwtModule],
@@ -21,6 +22,7 @@ import { MagicLinkGeneratorService } from './magic_link_generator/magic_link_gen
     NameSanitizerService,
     SubscriptionCheckerService,
     MagicLinkGeneratorService,
+    GenerateAccessIdService,
   ],
   exports: [
     GenerateUsernameService,
