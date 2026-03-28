@@ -33,6 +33,7 @@ import { GenerateAccessIdService } from './generate-access-id/generate-access-id
     NameSanitizerService,
     SubscriptionCheckerService,
     MagicLinkGeneratorService,
+    GenerateAccessIdService,
   ],
 })
 export class GlobalModule {}

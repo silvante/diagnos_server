@@ -4,10 +4,12 @@ import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { WorkerRoles } from '@prisma/client';
+import { GenerateAccessIdService } from 'src/global/generate-access-id/generate-access-id.service';
 
 @Injectable()
 export class VacancyService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly a_id: GenerateAccessIdService) {}
+
   async create(req: RequestWithUser, data: CreateVacancyDto) {
     const user = req.user;
     const new_vacancy = await this.prisma.vacancy.create({
@@ -18,6 +20,7 @@ export class VacancyService {
             id: user.id,
           },
         },
+        a_id: this.a_id.generate()
       },
       include: {
         user: true,
