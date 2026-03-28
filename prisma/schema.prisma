@@ -40,6 +40,7 @@ model User {
 
 model Vacancy {
   id         Int         @id @default(autoincrement())
+  a_id       String
   user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    Int
   age        Int
@@ -47,6 +48,7 @@ model Vacancy {
   origin     String
   job        String
   role       WorkerRoles @default(receptionist)
+  is_private Boolean     @default(true)
   name       String
   contact    String
   created_at DateTime    @default(now())
