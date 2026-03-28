@@ -8,9 +8,11 @@ export class UpdateUserDTO {
   @IsString()
   avatar?: string;
 
+  @IsOptional()
   @IsString()
   bio: string;
 
+  @IsOptional()
   @IsString()
   contact: string;
 }
