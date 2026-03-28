@@ -152,4 +152,11 @@ export class VacancyService {
       },
     };
   }
+
+  async getByAccessID(a_id: string) {
+    const vacancy = await this.prisma.vacancy.findUnique({
+      where: { a_id: a_id },
+    });
+    return vacancy;
+  }
 }

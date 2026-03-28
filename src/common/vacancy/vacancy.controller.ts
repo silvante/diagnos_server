@@ -41,6 +41,12 @@ export class VacancyController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('access/:a_id')
+  getByAccessID(@Param('a_id') a_id: string) {
+    return this.vacancyService.getByAccessID(a_id);
+  }
+
+  @UseGuards(AuthGuard)
   @Post('create')
   create(
     @Req() req: RequestWithUser,
