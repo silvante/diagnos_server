@@ -23,7 +23,7 @@ export class DoctorAccessGuard implements CanActivate {
 
     if (worker && worker.role !== 'doctor') {
       throw new HttpException(
-        'bu xususiyatdan foydalanish uchun siz shifokor yoki egasi bo'lishingiz kerak',
+        "bu xususiyatdan foydalanish uchun siz shifokor yoki egasi bo'lishingiz kerak",
         404,
       );
     }
