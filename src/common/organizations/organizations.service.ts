@@ -33,6 +33,11 @@ export class OrganizationsService {
   async createOrganization(req: RequestWithUser, data: CreateOrganizationDto) {
     const user = req.user;
     const { pincode, banner, ...form_data } = data;
+
+    if (pincode.length === 6) {
+      throw new HttpException("Pinkod 6 xonali son bo'lishi kerak.", 404)
+    }
+
     const hashed_pincode = bcrypt.hashSync(pincode, SALT_RESULT);
     const unique_name = await this.uniquename.generate(data.name);
 
