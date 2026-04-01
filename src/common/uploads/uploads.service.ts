@@ -50,7 +50,7 @@ export class UploadsService {
     let optimisedBuffer: Buffer;
 
     if (file.mimetype === 'image/svg+xml') {
-      throw new HttpException('SVG files are not allowed for avatars', 404);
+      throw new HttpException('Avatar uchun SVG fayllariga ruxsat berilmaydi', 404);
     } else {
       optimisedBuffer = await sharp(file.buffer)
         .resize({ width: 400, height: 400 })
@@ -99,7 +99,7 @@ export class UploadsService {
     let optimisedThumbnailBuffer: Buffer;
 
     if (file.mimetype === 'image/svg+xml') {
-      throw new HttpException('SVG files are not allowed for banners', 404);
+      throw new HttpException('Bannerlar uchun SVG fayllariga ruxsat berilmaydi', 404);
     } else {
       optimisedOriginalBuffer = await sharp(file.buffer)
         .resize({ width: 1280, height: 320 })

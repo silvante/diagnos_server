@@ -17,7 +17,7 @@ export class SubscriptionCheckerService {
       isAfter(org.renews_at, now);
 
     if (!is_subscribed) {
-      throw new HttpException('organization_is_not_subscribed', 407);
+      throw new HttpException("Tashkilot obuna bo'lmagan", 407);
     }
 
     return is_subscribed;

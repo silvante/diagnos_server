@@ -131,7 +131,7 @@ export class ClientsService {
     });
 
     if (!clients) {
-      throw new HttpException('Server error, please try again later', 404);
+      throw new HttpException("Serverda xatolik, birozdan so'ng urinib ko'ring", 404);
     }
     if (worker && worker.role === 'doctor') {
       return {
@@ -234,7 +234,7 @@ export class ClientsService {
     }
 
     if (!updated_diagnosis) {
-      throw new HttpException('Internal server error', 404);
+      throw new HttpException('Ichki server xatosi', 404);
     }
 
     // realime: Update event
@@ -271,14 +271,14 @@ export class ClientsService {
 
     if (!client) {
       throw new HttpException(
-        'this organization does not own this client, or server error',
+        'bu tashkilot ushbu mijozga ega emas yoki serverda xatolik',
         404,
       );
     }
 
     if (client.is_checked) {
       throw new HttpException(
-        'You can not update client if it has already checked',
+        "Agar mijoz allaqachon tekshirilgan bo'lsa, uni yangilay olmaysiz",
         404,
       );
     }
@@ -377,14 +377,14 @@ export class ClientsService {
 
     if (!client) {
       throw new HttpException(
-        'this organization does not own this client, or server error',
+        'bu tashkilot ushbu mijozga ega emas yoki serverda xatolik',
         404,
       );
     }
 
     if (client.is_checked) {
       throw new HttpException(
-        'You can not delete client if it has already checked',
+        "Agar mijoz allaqachon tekshirilgan bo'lsa, uni o'chira olmaysiz",
         404,
       );
     }

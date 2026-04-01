@@ -21,7 +21,7 @@ export class WorkersService {
       },
     });
     if (!organization) {
-      throw new HttpException('You do not own this organization', 404);
+      throw new HttpException('Siz ushbu tashkilotga ega emassiz', 404);
     }
     const vacancy = await this.prisma.vacancy.findUnique({
       where: { id: params.vacancy_id },
@@ -35,17 +35,17 @@ export class WorkersService {
       },
     });
     if (!vacancy) {
-      throw new HttpException('Vacancy not found', 404);
+      throw new HttpException('Vakansiya topilmadi', 404);
     }
     if (vacancy.user.works && vacancy.user.works.length > 0) {
       throw new HttpException(
-        'This user already has a job, you can contact with him/her.',
+        "Bu foydalanuvchining allaqachon ishi bor, u bilan bog'lanishingiz mumkin.",
         402,
       );
     }
     if (vacancy.user_id === user.id) {
       throw new HttpException(
-        'This is your own account you can not hire yourself.',
+        "Bu sizning shaxsiy hisobingiz, o'zingizni ishga yollay olmaysiz.",
         402,
       );
     }
@@ -55,7 +55,7 @@ export class WorkersService {
 
     if (existing_worker) {
       throw new HttpException(
-        'You already hired worker with the same account.',
+        'Siz allaqachon bir xil hisobga ega ishchini yollagansiz.',
         404,
       );
     }
@@ -140,7 +140,7 @@ export class WorkersService {
       },
     });
     if (!workers) {
-      throw new HttpException('Internal server error', 404);
+      throw new HttpException('Ichki server xatosi', 404);
     }
     return workers;
   }
@@ -166,7 +166,7 @@ export class WorkersService {
       },
     });
     if (!worker) {
-      throw new HttpException('Internal server error', 404);
+      throw new HttpException('Ichki server xatosi', 404);
     }
     return worker;
   }
@@ -186,7 +186,7 @@ export class WorkersService {
     });
 
     if (!organization) {
-      throw new HttpException('You do not own this organization', 404);
+      throw new HttpException('Siz ushbu tashkilotga ega emassiz', 404);
     }
 
     const existing_worker = organization.workers.find(
@@ -195,7 +195,7 @@ export class WorkersService {
 
     if (!existing_worker) {
       throw new HttpException(
-        'You do not have this worker in your organization',
+        "Sizning tashkilotingizda bu ishchi yo'q",
         404,
       );
     }

@@ -30,13 +30,13 @@ export class AuthService {
     });
     if (present_user && present_user.provider === 'email') {
       throw new HttpException(
-        `User with this email already exists, please sign-in`,
+        `Ushbu email bilan ro'yxatdan o'tgan foydalanuvchi mavjud, iltimos tizimga kiring`,
         404,
       );
     }
     if (present_user && present_user.provider !== 'email') {
       throw new HttpException(
-        `provider of ${present_user.email} is ${present_user.provider}, please use ${present_user.provider} to register`,
+        `${present_user.email} ning provayderi ${present_user.provider}, iltimos ro'yxatdan o'tish uchun ${present_user.provider} dan foydalaning`,
         404,
       );
     }
@@ -70,11 +70,11 @@ export class AuthService {
 
     // error handling
     if (!the_user) {
-      throw new HttpException('User is not defined', 404);
+      throw new HttpException('Foydalanuvchi topilmadi', 404);
     }
     if (the_user.provider !== 'email') {
       throw new HttpException(
-        `provider of ${the_user.email} is ${the_user.provider}, please use ${the_user.provider} to register`,
+        `${the_user.email} ning provayderi ${the_user.provider}, iltimos ro'yxatdan o'tish uchun ${the_user.provider} dan foydalaning`,
         404,
       );
     }
@@ -108,7 +108,7 @@ export class AuthService {
       };
       const new_user = await this.prisma.user.create({ data: userdata });
       if (!new_user) {
-        throw new HttpException('Server Error, try again later', 400);
+        throw new HttpException("Serverda xatolik, birozdan so'ng urinib ko'ring", 400);
       }
       const access_token = this.access_token.generate(new_user);
       const reset_token = this.reset_token.generate(new_user);
@@ -121,7 +121,7 @@ export class AuthService {
         where: { email: data.email },
       });
       if (!user) {
-        throw new HttpException('User is not defined', 404);
+        throw new HttpException('Foydalanuvchi topilmadi', 404);
       }
       const access_token = this.access_token.generate(user);
       const reset_token = this.reset_token.generate(user);
@@ -130,7 +130,7 @@ export class AuthService {
         reset_token: reset_token,
       };
     } else {
-      throw new HttpException('Invalid Token', 404);
+      throw new HttpException('Yaroqsiz token', 404);
     }
   }
 
@@ -155,7 +155,7 @@ export class AuthService {
       },
     });
     if (!userdata) {
-      throw new HttpException('user is not defined', 404);
+      throw new HttpException('Foydalanuvchi topilmadi', 404);
     }
     return userdata;
   }
@@ -171,7 +171,7 @@ export class AuthService {
     });
 
     if (!existing_user && existing_email) {
-      const error_message = `provider of ${existing_email.email} is ${existing_email.provider}, please use ${existing_email.provider} to register`;
+      const error_message = `${existing_email.email} ning provayderi ${existing_email.provider}, iltimos ro'yxatdan o'tish uchun ${existing_email.provider} dan foydalaning`;
       return res.redirect(
         `${process.env.FRONT_ORIGIN}/signin/?error=${error_message}`,
       );
@@ -225,7 +225,7 @@ export class AuthService {
     });
 
     if (!existing_user && existing_email) {
-      const error_message = `provider of ${existing_email.email} is ${existing_email.provider}, please use ${existing_email.provider} to register`;
+      const error_message = `${existing_email.email} ning provayderi ${existing_email.provider}, iltimos ro'yxatdan o'tish uchun ${existing_email.provider} dan foydalaning`;
       return res.redirect(
         `${process.env.FRONT_ORIGIN}/signin/?error=${error_message}`,
       );
@@ -271,13 +271,13 @@ export class AuthService {
   async ResetToken(token: string) {
     const payload = this.jwt.verify(token);
     if (payload.action !== 'reset' || !payload.email) {
-      return new HttpException('invalid reset token', 404);
+      return new HttpException('Yaroqsiz tiklash tokeni', 404);
     }
     const user = await this.prisma.user.findUnique({
       where: { email: payload.email },
     });
     if (!user) {
-      throw new HttpException('User is not defined', 404);
+      throw new HttpException('Foydalanuvchi topilmadi', 404);
     }
     return this.access_token.generate(user);
   }

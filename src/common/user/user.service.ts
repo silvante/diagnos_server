@@ -34,7 +34,7 @@ export class UserService {
       },
     });
     if (!updating) {
-      throw new HttpException('Internal Server Error, try again later', 400);
+      throw new HttpException("Serverda xatolik, birozdan so'ng urinib ko'ring", 400);
     }
     return updating;
   }
@@ -42,7 +42,7 @@ export class UserService {
   async getUserById(id: number) {
     const user = await this.prisma.user.findUnique({ where: { id: id } });
     if (!user) {
-      throw new HttpException('user not defined', 404);
+      throw new HttpException('Foydalanuvchi topilmadi', 404);
     }
     return user;
   }
@@ -66,7 +66,7 @@ export class UserService {
       },
     });
     if (!work) {
-      throw new HttpException('there is no work', 404);
+      throw new HttpException("ish yo'q", 404);
     }
 
     // checking for subscription

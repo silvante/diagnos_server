@@ -10,7 +10,7 @@ export class TypesService {
   async findAll(req: RequestWithUser) {
     const org = req.organization;
     if (!org) {
-      throw new HttpException('you do not own this organization', 404);
+      throw new HttpException('siz ushbu tashkilotga ega emassiz', 404);
     }
     const types = await this.prisma.type.findMany({
       where: { organization_id: org.id },
@@ -24,7 +24,7 @@ export class TypesService {
       },
     });
     if (!types) {
-      throw new HttpException('Server error, please try again later', 404);
+      throw new HttpException("Serverda xatolik, birozdan so'ng urinib ko'ring", 404);
     }
     return types;
   }
@@ -68,7 +68,7 @@ export class TypesService {
 
     if (!updated) {
       throw new HttpException(
-        'Type not defined, or you do not own this type',
+        'Turi aniqlanmagan yoki siz ushbu turga ega emassiz',
         400,
       );
     }
@@ -92,12 +92,12 @@ export class TypesService {
     });
 
     if (!type) {
-      throw new HttpException('Type not found', 404);
+      throw new HttpException('Turi topilmadi', 404);
     }
 
     if (type._count.diagnoses > 0) {
       throw new HttpException(
-        'You can not delete this type, it has clients attached.',
+        "Siz bu turni o'chira olmaysiz, unga mijozlar biriktirilgan.",
         404,
       );
     }

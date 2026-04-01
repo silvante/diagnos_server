@@ -21,7 +21,7 @@ export class OrganizationAccessGuard implements CanActivate {
     const org_id = req.params.org_id;
 
     if (!user || (!org_id && !unique_name)) {
-      throw new HttpException('Unauthorized', 401);
+      throw new HttpException('Ruxsatsiz', 401);
     }
 
     const where = unique_name ? { unique_name } : { id: Number(org_id) };
@@ -48,7 +48,7 @@ export class OrganizationAccessGuard implements CanActivate {
     });
 
     if (!organization) {
-      throw new HttpException('Organization not found', 404);
+      throw new HttpException('Tashkilot topilmadi', 404);
     }
 
     // checking for subscription
@@ -68,7 +68,7 @@ export class OrganizationAccessGuard implements CanActivate {
     const worker = transformed.workers.find((w) => w.worker_id === user.id);
 
     if (!isOwner && !isWorker) {
-      throw new HttpException('Forbidden', 403);
+      throw new HttpException('Taqiqlangan', 403);
     }
 
     if (worker) {

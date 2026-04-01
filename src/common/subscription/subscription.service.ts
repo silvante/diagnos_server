@@ -15,7 +15,7 @@ export class SubscriptionService {
     });
 
     if (!org) {
-      throw new HttpException('Organization not found', 404);
+      throw new HttpException('Tashkilot topilmadi', 404);
     }
 
     // subscription cheking
@@ -87,7 +87,7 @@ export class SubscriptionService {
     switch (event.meta.event_name) {
       case 'subscription_created':
         const org_id = Number(event.meta.custom_data.organization_id);
-        if (!org_id) throw new HttpException('No organization Found', 404);
+        if (!org_id) throw new HttpException('Tashkilot topilmadi', 404);
         await this.prisma.organization.update({
           where: { id: org_id },
           data: {
@@ -99,7 +99,7 @@ export class SubscriptionService {
         break;
       case 'subscription_payment_success':
         const ORG_ID = Number(event.meta.custom_data.organization_id);
-        if (!ORG_ID) throw new HttpException('No organization Found', 404);
+        if (!ORG_ID) throw new HttpException('Tashkilot topilmadi', 404);
         await this.prisma.organization.update({
           where: { id: ORG_ID },
           data: {
@@ -110,7 +110,7 @@ export class SubscriptionService {
         break;
       case 'subscription_expired':
         const orgId = Number(event.meta.custom_data.organization_id);
-        if (!orgId) throw new HttpException('No organization Found', 404);
+        if (!orgId) throw new HttpException('Tashkilot topilmadi', 404);
         await this.prisma.organization.update({
           where: { id: orgId },
           data: {
@@ -121,7 +121,7 @@ export class SubscriptionService {
         break;
       default:
         const ident = Number(event.meta.custom_data.organization_id);
-        if (!ident) throw new HttpException('No organization Found', 404);
+        if (!ident) throw new HttpException('Tashkilot topilmadi', 404);
         await this.prisma.organization.update({
           where: { id: ident },
           data: {

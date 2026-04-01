@@ -26,11 +26,11 @@ export class AdminGuard implements CanActivate {
       const data = this.jwt.verify(token);
 
       if (!data.admin_access) {
-        throw new HttpException('invalid access token', 408);
+        throw new HttpException('yaroqsiz kirish tokeni', 408);
       }
       return true;
     } catch (error) {
-      throw new HttpException('Authentication required', 408);
+      throw new HttpException('Autentifikatsiya talab qilinadi', 408);
     }
   }
 }

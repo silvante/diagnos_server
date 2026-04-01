@@ -23,7 +23,7 @@ export class ReceptionistAccessGuard implements CanActivate {
 
     if (worker && worker.role !== 'receptionist') {
       throw new HttpException(
-        'you should be receptionist or owner to use this feature',
+        'bu xususiyatdan foydalanish uchun siz qabulxona xodimi yoki egasi bo'lishingiz kerak',
         404,
       );
     }

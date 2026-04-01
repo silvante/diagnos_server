@@ -30,7 +30,7 @@ export class VacancyService {
       },
     });
     if (!new_vacancy) {
-      throw new HttpException('Internal server error', 404);
+      throw new HttpException('Ichki server xatosi', 404);
     }
     return new_vacancy;
   }
@@ -44,7 +44,7 @@ export class VacancyService {
       },
     });
     if (!vacancies) {
-      throw new HttpException('Internal server error', 404);
+      throw new HttpException('Ichki server xatosi', 404);
     }
     return vacancies;
   }
@@ -57,7 +57,7 @@ export class VacancyService {
       },
     });
     if (!vacancy) {
-      throw new HttpException('Vacancy not found', 404);
+      throw new HttpException('Vakansiya topilmadi', 404);
     }
     return vacancy;
   }
@@ -75,7 +75,7 @@ export class VacancyService {
     });
     if (!vacancy) {
       throw new HttpException(
-        'Vacancy not found or You do not own this vacancy',
+        'Vakansiya topilmadi yoki siz ushbu vakansiyaga ega emassiz',
         404,
       );
     }
@@ -89,7 +89,7 @@ export class VacancyService {
     });
     if (!deleting_obj) {
       throw new HttpException(
-        'Vacancy not found or You do not own this vacancy',
+        'Vakansiya topilmadi yoki siz ushbu vakansiyaga ega emassiz',
         404,
       );
     }

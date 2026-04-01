@@ -113,7 +113,7 @@ export class OrganizationsService {
     });
 
     if (!organization) {
-      throw new HttpException('You do not own this organization', 404);
+      throw new HttpException('Siz ushbu tashkilotga ega emassiz', 404);
     }
 
     // checking for subscription
@@ -125,7 +125,7 @@ export class OrganizationsService {
     );
 
     if (!is_pincode_valid) {
-      throw new HttpException('Invalid pincode', 400);
+      throw new HttpException('Yaroqsiz pinkod', 400);
     }
 
     return { validation: true, organization: organization };
@@ -165,7 +165,7 @@ export class OrganizationsService {
 
     if (!updated_organization) {
       throw new HttpException(
-        'You do not own this organization or internal server error',
+        'Siz ushbu tashkilotga ega emassiz yoki ichki server xatosi',
         404,
       );
     }
@@ -191,14 +191,14 @@ export class OrganizationsService {
       where: { unique_name: unique_name, owner_id: user.id },
     });
     if (!org) {
-      throw new HttpException('You do not own this organization', 404);
+      throw new HttpException('Siz ushbu tashkilotga ega emassiz', 404);
     }
     const is_pin_ok = bcrypt.compareSync(data.old_pincode, org.pincode);
     if (!is_pin_ok) {
-      throw new HttpException('invalide pincode', 404);
+      throw new HttpException('yaroqsiz pinkod', 404);
     }
     if (data.new_pincode !== data.pincode_confirmation) {
-      throw new HttpException('pincode confirmation should match', 404);
+      throw new HttpException('pinkod tasdiqlanishi mos kelishi kerak', 404);
     }
     const updated = await this.prisma.organization.update({
       where: { id: org.id },
@@ -208,7 +208,7 @@ export class OrganizationsService {
       },
     });
     if (!updated) {
-      throw new HttpException('internal server error', 404);
+      throw new HttpException('ichki server xatosi', 404);
     }
     return updated;
   }
@@ -227,11 +227,11 @@ export class OrganizationsService {
       },
     });
     if (!org) {
-      throw new HttpException('You do not own this organization', 404);
+      throw new HttpException('Siz ushbu tashkilotga ega emassiz', 404);
     }
     if (org._count.clients > 0 || org._count.types > 0) {
       throw new HttpException(
-        'this organization has data attached to it, you can not delete this organization',
+        "ushbu tashkilotga biriktirilgan ma'lumotlar mavjud, siz ushbu tashkilotni o'chira olmaysiz",
         404,
       );
     }
@@ -256,7 +256,7 @@ export class OrganizationsService {
     });
 
     if (!org) {
-      throw new HttpException('you do not own this organization', 404);
+      throw new HttpException('siz ushbu tashkilotga ega emassiz', 404);
     }
 
     if (exisiting_DO) {

@@ -15,7 +15,7 @@ export class AdminService {
 
     // comparing
     if (password !== secret) {
-      throw new HttpException('password incorrect :(', 404);
+      throw new HttpException("parol noto'g'ri :(", 404);
     }
 
     const access_token = this.jwt.sign({ admin_access: true });
