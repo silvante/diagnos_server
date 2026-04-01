@@ -35,7 +35,7 @@ export class OrganizationsService {
     const { pincode, banner, ...form_data } = data;
 
     if (pincode.length === 6) {
-      throw new HttpException("Pinkod 6 xonali son bo'lishi kerak.", 404)
+      throw new HttpException("Pinkod 6 xonali son bo'lishi kerak.", 404);
     }
 
     const hashed_pincode = bcrypt.hashSync(pincode, SALT_RESULT);
@@ -179,6 +179,13 @@ export class OrganizationsService {
     data: UpdatePincodeDto,
   ) {
     const user = req.user;
+
+    if (data.old_pincode.length !== 6 || data.new_pincode.length !== 6) {
+      throw new HttpException(
+        "Pinkodlar 6 xonali sondan iborat bol'ishi kerak.",
+        404,
+      );
+    }
 
     const org = await this.prisma.organization.findUnique({
       where: { unique_name: unique_name, owner_id: user.id },
