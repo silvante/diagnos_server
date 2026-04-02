@@ -14,21 +14,28 @@ import { CreateWorkerDto } from './dto/create-worker.dto';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
+import { OrganizationAccessGuard } from 'src/guards/organization-access/organization-access.guard';
 
 @Controller('organizations/:org_id/workers')
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
+  @UseGuards(AuthGuard, OrganizationAccessGuard)
+  @Get('requests')
+  getJoinRequests(@Req() req: RequestWithUser) {
+    return this.workersService.getJoinRequests(req);
+  }
+
   @UseGuards(AuthGuard)
-  @Post(':vacancy_id/hire')
+  @Post(':req_id/hire')
   create(
     @Req() req: RequestWithUser,
-    @Param() params: { org_id: string; vacancy_id: string },
+    @Param() params: { org_id: string; req_id: string },
     @Body() data: CreateWorkerDto,
   ) {
     return this.workersService.hire(
       req,
-      { org_id: +params.org_id, vacancy_id: +params.vacancy_id },
+      { org_id: +params.org_id, req_id: +params.req_id },
       data,
     );
   }

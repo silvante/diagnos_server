@@ -37,6 +37,12 @@ export class OrganizationsController {
     return this.organiztaionService.createOrganization(req, data);
   }
 
+  @UseGuards(AuthGuard)
+  @Get('/open/:unique_name')
+  getOpenOrganization(@Param('unique_name') unique_name: string) {
+    return this.getOpenOrganization(unique_name);
+  }
+
   @UseGuards(AuthGuard, OrganizationAccessGuard)
   @Get('/:unique_name')
   getOrganizationById(@Req() req: RequestWithUser) {
