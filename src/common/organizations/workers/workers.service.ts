@@ -10,7 +10,7 @@ export class WorkersService {
 
   async hire(
     req: RequestWithUser,
-    params: { org_id: number; vacancy_id: number },
+    params: { org_id: number; req_id: number },
     data: CreateWorkerDto,
   ) {
     const user = req.user;
@@ -23,10 +23,10 @@ export class WorkersService {
     if (!organization) {
       throw new HttpException('Siz ushbu tashkilotga ega emassiz', 404);
     }
-    const vacancy = await this.prisma.vacancy.findUnique({
-      where: { id: params.vacancy_id },
+    const joinRequest = await this.prisma.joinRequest.findUnique({
+      where: { id: params.req_id },
       include: {
-        user: {
+        applicant: {
           select: {
             id: true,
             works: true,
@@ -34,23 +34,23 @@ export class WorkersService {
         },
       },
     });
-    if (!vacancy) {
+    if (!joinRequest) {
       throw new HttpException('Vakansiya topilmadi', 404);
     }
-    if (vacancy.user.works && vacancy.user.works.length > 0) {
+    if (joinRequest.applicant.works && joinRequest.applicant.works.length > 0) {
       throw new HttpException(
         "Bu foydalanuvchining allaqachon ishi bor, u bilan bog'lanishingiz mumkin.",
         402,
       );
     }
-    if (vacancy.user_id === user.id) {
+    if (joinRequest.applicant_id === user.id) {
       throw new HttpException(
         "Bu sizning shaxsiy hisobingiz, o'zingizni ishga yollay olmaysiz.",
         402,
       );
     }
     const existing_worker = organization.workers.find(
-      (w) => w.worker_id === vacancy.user_id,
+      (w) => w.worker_id === joinRequest.applicant_id,
     );
 
     if (existing_worker) {
@@ -67,7 +67,7 @@ export class WorkersService {
         data: {
           worker: {
             connect: {
-              id: vacancy.user.id,
+              id: joinRequest.applicant.id,
             },
           },
           organization: {
@@ -102,7 +102,7 @@ export class WorkersService {
         data: {
           worker: {
             connect: {
-              id: vacancy.user.id,
+              id: joinRequest.applicant.id,
             },
           },
           organization: {
@@ -194,10 +194,7 @@ export class WorkersService {
     );
 
     if (!existing_worker) {
-      throw new HttpException(
-        "Sizning tashkilotingizda bu ishchi yo'q",
-        404,
-      );
+      throw new HttpException("Sizning tashkilotingizda bu ishchi yo'q", 404);
     }
 
     const { attached_types, role } = data;

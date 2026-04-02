@@ -10,7 +10,6 @@ import { GlobalModule } from './global/global.module';
 import { OrganizationsModule } from './common/organizations/organizations.module';
 import { UploadsModule } from './common/uploads/uploads.module';
 import { UserModule } from './common/user/user.module';
-import { VacancyModule } from './common/vacancy/vacancy.module';
 import { SubscriptionModule } from './common/subscription/subscription.module';
 import { AdminModule } from './admin/admin.module';
 
@@ -25,7 +24,6 @@ import { AdminModule } from './admin/admin.module';
     OrganizationsModule,
     UploadsModule,
     UserModule,
-    VacancyModule,
     SubscriptionModule,
     AdminModule,
   ],

@@ -42,7 +42,7 @@ model User {
   // vacancies            Vacancy[]
   works                Worker[]
   diagnoses            Diagnosis[]
-  joinRequestTypes     JoinRequestType[]
+  join_requests        JoinRequest[]
 }
 
 // model Vacancy {
@@ -61,7 +61,7 @@ model User {
 //   created_at DateTime    @default(now())
 // }
 
-model JoinRequestType {
+model JoinRequest {
   id           Int               @id @default(autoincrement())
   status       JoinRequestStatus @default(pending)
   applicant    User              @relation(fields: [applicant_id], references: [id])
@@ -121,7 +121,7 @@ model Organization {
   subscription_status String                @default("not_subscribed")
   renews_at           DateTime              @default(now())
   subscribed_at       DateTime              @default(now())
-  joinRequestTypes    JoinRequestType[]
+  join_request        JoinRequest[]
 }
 
 model Banner {

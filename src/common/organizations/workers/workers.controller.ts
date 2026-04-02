@@ -20,15 +20,15 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @UseGuards(AuthGuard)
-  @Post(':vacancy_id/hire')
+  @Post(':req_id/hire')
   create(
     @Req() req: RequestWithUser,
-    @Param() params: { org_id: string; vacancy_id: string },
+    @Param() params: { org_id: string; req_id: string },
     @Body() data: CreateWorkerDto,
   ) {
     return this.workersService.hire(
       req,
-      { org_id: +params.org_id, vacancy_id: +params.vacancy_id },
+      { org_id: +params.org_id, req_id: +params.req_id },
       data,
     );
   }
