@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { startOfDay, endOfDay } from 'date-fns';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { SearchClientParamsDto } from './dto/search-clients.dto';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { ClientsGateway } from './clients.gateway';
 
 @Injectable()
