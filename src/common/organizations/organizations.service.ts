@@ -92,6 +92,23 @@ export class OrganizationsService {
     return organization;
   }
 
+  async GetOpenOrganization(unique_name: string) {
+    const organization = await this.prisma.organization.findUnique({
+      where: { unique_name: unique_name },
+      select: {
+        name: true,
+        unique_name: true,
+        description: true,
+        logo: true,
+        banner: true,
+      },
+    });
+    if (!organization) {
+      throw new HttpException("Tashkilot to'pilmadi", 404);
+    }
+    return organization;
+  }
+
   async ValidateOrganization(
     req: RequestWithUser,
     unique_name: string,
