@@ -34,7 +34,7 @@ export class OrganizationsService {
     const user = req.user;
     const { pincode, banner, ...form_data } = data;
 
-    if (pincode.length === 6) {
+    if (pincode.length !== 6) {
       throw new HttpException("Pinkod 6 xonali son bo'lishi kerak.", 404);
     }
 
