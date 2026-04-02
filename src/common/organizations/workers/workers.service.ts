@@ -8,6 +8,16 @@ import { UpdateWorkerDto } from './dto/update-worker.dto';
 export class WorkersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getJoinRequests(req: RequestWithUser) {
+    const org = req.organization;
+
+    const requests = await this.prisma.joinRequest.findMany({
+      where: { org_id: org.id, status: 'pending' },
+    });
+
+    return requests;
+  }
+
   async hire(
     req: RequestWithUser,
     params: { org_id: number; req_id: number },
