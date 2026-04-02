@@ -19,7 +19,7 @@ export class JoinRequestsController {
   @UseGuards(AuthGuard)
   @Get('/')
   getMyRequests(@Req() req: RequestWithUser) {
-    return this.joinReqService.GetMyRequest(req);
+    return this.joinReqService.GetMyRequest(req); 
   }
 
   @UseGuards(AuthGuard)
