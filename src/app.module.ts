@@ -12,6 +12,7 @@ import { UploadsModule } from './common/uploads/uploads.module';
 import { UserModule } from './common/user/user.module';
 import { SubscriptionModule } from './common/subscription/subscription.module';
 import { AdminModule } from './admin/admin.module';
+import { JoinRequestsModule } from './common/join_requests/join_requests.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AdminModule } from './admin/admin.module';
     UserModule,
     SubscriptionModule,
     AdminModule,
+    JoinRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
