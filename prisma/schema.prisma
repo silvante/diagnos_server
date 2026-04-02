@@ -20,6 +20,12 @@ enum WorkerRoles {
   doctor
 }
 
+enum JoinRequestStatus {
+  pending
+  accepted
+  rejected
+}
+
 model User {
   id                   Int                  @id @default(autoincrement())
   name                 String
@@ -33,25 +39,36 @@ model User {
   default_organization DefaultOrganization? @relation("user_default_organization")
   organizations        Organization[]
   created_at           DateTime             @default(now())
-  vacancies            Vacancy[]
+  // vacancies            Vacancy[]
   works                Worker[]
   diagnoses            Diagnosis[]
+  joinRequestTypes     JoinRequestType[]
 }
 
-model Vacancy {
-  id         Int         @id @default(autoincrement())
-  a_id       String      @unique
-  user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id    Int
-  age        Int
-  about      String
-  origin     String
-  job        String
-  role       WorkerRoles @default(receptionist)
-  is_private Boolean     @default(true)
-  name       String
-  contact    String
-  created_at DateTime    @default(now())
+// model Vacancy {
+//   id         Int         @id @default(autoincrement())
+//   a_id       String      @unique
+//   user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+//   user_id    Int
+//   age        Int
+//   about      String
+//   origin     String
+//   job        String
+//   role       WorkerRoles @default(receptionist)
+//   is_private Boolean     @default(true)
+//   name       String
+//   contact    String
+//   created_at DateTime    @default(now())
+// }
+
+model JoinRequestType {
+  id           Int               @id @default(autoincrement())
+  status       JoinRequestStatus @default(pending)
+  applicant    User              @relation(fields: [applicant_id], references: [id])
+  applicant_id Int
+  org          Organization      @relation(fields: [org_id], references: [id])
+  org_id       Int
+  role         WorkerRoles       @default(receptionist)
 }
 
 model Worker {
@@ -104,6 +121,7 @@ model Organization {
   subscription_status String                @default("not_subscribed")
   renews_at           DateTime              @default(now())
   subscribed_at       DateTime              @default(now())
+  joinRequestTypes    JoinRequestType[]
 }
 
 model Banner {
