@@ -39,27 +39,10 @@ model User {
   default_organization DefaultOrganization? @relation("user_default_organization")
   organizations        Organization[]
   created_at           DateTime             @default(now())
-  // vacancies            Vacancy[]
   works                Worker[]
   diagnoses            Diagnosis[]
   join_requests        JoinRequest[]
 }
-
-// model Vacancy {
-//   id         Int         @id @default(autoincrement())
-//   a_id       String      @unique
-//   user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
-//   user_id    Int
-//   age        Int
-//   about      String
-//   origin     String
-//   job        String
-//   role       WorkerRoles @default(receptionist)
-//   is_private Boolean     @default(true)
-//   name       String
-//   contact    String
-//   created_at DateTime    @default(now())
-// }
 
 model JoinRequest {
   id           Int               @id @default(autoincrement())
