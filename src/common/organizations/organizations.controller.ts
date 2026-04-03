@@ -40,7 +40,7 @@ export class OrganizationsController {
   @UseGuards(AuthGuard)
   @Get('/open/:unique_name')
   getOpenOrganization(@Param('unique_name') unique_name: string) {
-    return this.getOpenOrganization(unique_name);
+    return this.organiztaionService.GetOpenOrganization(unique_name);
   }
 
   @UseGuards(AuthGuard, OrganizationAccessGuard)
