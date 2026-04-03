@@ -81,6 +81,13 @@ export class WorkersService {
 
     const { attached_types, role } = data;
 
+    await this.prisma.joinRequest.update({
+      where: { id: joinRequest.id },
+      data: {
+        status: 'accepted',
+      },
+    });
+
     if (role === 'doctor' && attached_types) {
       const new_worker = await this.prisma.worker.create({
         data: {
