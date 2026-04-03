@@ -13,6 +13,15 @@ export class WorkersService {
 
     const requests = await this.prisma.joinRequest.findMany({
       where: { org_id: org.id, status: 'pending' },
+      include: {
+        applicant: {
+          select: {
+            name: true,
+            avatar: true,
+            bio: true,
+          },
+        },
+      },
     });
 
     return requests;
