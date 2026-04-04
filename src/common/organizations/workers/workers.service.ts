@@ -27,6 +27,22 @@ export class WorkersService {
     return requests;
   }
 
+  async rejectJoinRequests(req: RequestWithUser, req_id: number) {
+    const org = req.organization;
+
+    const rejected_req = await this.prisma.joinRequest.update({
+      where: { id: req_id, org_id: org.id, status: 'pending' },
+      data: {
+        status: 'rejected',
+      },
+    });
+
+    return {
+      rejected: true,
+      join_request: rejected_req,
+    };
+  }
+
   async hire(
     req: RequestWithUser,
     params: { org_id: number; req_id: number },
