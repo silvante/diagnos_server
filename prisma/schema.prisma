@@ -52,6 +52,7 @@ model JoinRequest {
   org          Organization      @relation(fields: [org_id], references: [id])
   org_id       Int
   role         WorkerRoles       @default(receptionist)
+  created_at   DateTime          @default(now())
 }
 
 model Worker {
