@@ -27,6 +27,19 @@ export class WorkersService {
     return requests;
   }
 
+  async getJoinRequest(req: RequestWithUser, req_id: number) {
+    const org = req.organization;
+
+    const request = await this.prisma.joinRequest.findUnique({
+      where: { id: req_id, status: 'pending', org_id: org.id },
+      include: {
+        applicant: true,
+      },
+    });
+
+    return request;
+  }
+
   async rejectJoinRequests(req: RequestWithUser, req_id: number) {
     const org = req.organization;
 

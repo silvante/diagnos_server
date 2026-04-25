@@ -27,6 +27,12 @@ export class WorkersController {
   }
 
   @UseGuards(AuthGuard, OrganizationAccessGuard)
+  @Get('requests/:req_id')
+  getJoinReq(@Req() req: RequestWithUser, @Param('req_id') req_id: string) {
+    return this.workersService.getJoinRequest(req, +req_id);
+  }
+
+  @UseGuards(AuthGuard, OrganizationAccessGuard)
   @Put('requests/:req_id/reject')
   RejectJoinRequests(
     @Req() req: RequestWithUser,
