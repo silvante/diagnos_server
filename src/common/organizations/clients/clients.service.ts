@@ -485,6 +485,7 @@ export class ClientsService {
       this.prisma.client.findMany({
         where: {
           organization_id: org.id,
+          is_checked: true,
           created_at: {
             gte: start,
             lte: end,
